@@ -31,9 +31,8 @@ class NeoForgeFile(MetaBase):
 class NeoForgeEntry(MetaBase):
     artifact: str
     long_version: str = Field(alias="longversion")
-    mc_version: str = Field(alias="mcversion")
     version: str
-    build: int
+    build: Optional[int]
     branch: Optional[str]
     latest: Optional[bool]
     recommended: Optional[bool]
@@ -186,8 +185,6 @@ class NeoForgeVersion:
         if self.artifact == "neoforge":
             self.rawVersion = entry.long_version
 
-        self.mc_version = entry.mc_version
-        self.mc_version_sane = self.mc_version.replace("_pre", "-pre", 1)
         self.branch = entry.branch
         self.installer_filename = None
         self.installer_url = None
