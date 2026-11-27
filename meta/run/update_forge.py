@@ -393,30 +393,26 @@ def main():
                 if version.mc_version_sane == "1.6.1":
                     continue
 
-                # only gather legacy info if it's missing
-                if not os.path.isfile(LEGACYINFO_PATH):
-                    # grab the jar/zip if it's not there
-                    if not os.path.isfile(jar_path):
-                        download_binary_file(sess, jar_path, version.url())
-                    # find the latest timestamp in the zip file
-                    tstamp = datetime.fromtimestamp(0)
-                    with zipfile.ZipFile(jar_path) as jar:
-                        for info in jar.infolist():
-                            tstamp_new = datetime(*info.date_time)
-                            if tstamp_new > tstamp:
-                                tstamp = tstamp_new
-                    legacy_info = ForgeLegacyInfo()
-                    legacy_info.release_time = tstamp
-                    legacy_info.sha1 = file_hash(jar_path, hashlib.sha1)
-                    legacy_info.sha256 = file_hash(jar_path, hashlib.sha256)
-                    legacy_info.size = os.path.getsize(jar_path)
-                    legacy_info_list.number[str(version.build)] = legacy_info
+                # grab the jar/zip if it's not there
+                if not os.path.isfile(jar_path):
+                    download_binary_file(sess, jar_path, version.url())
+                # find the latest timestamp in the zip file
+                tstamp = datetime.fromtimestamp(0)
+                with zipfile.ZipFile(jar_path) as jar:
+                    for info in jar.infolist():
+                        tstamp_new = datetime(*info.date_time)
+                        if tstamp_new > tstamp:
+                            tstamp = tstamp_new
+                legacy_info = ForgeLegacyInfo()
+                legacy_info.release_time = tstamp
+                legacy_info.sha1 = file_hash(jar_path, hashlib.sha1)
+                legacy_info.sha256 = file_hash(jar_path, hashlib.sha256)
+                legacy_info.size = os.path.getsize(jar_path)
+                legacy_info_list.number[str(version.build)] = legacy_info
         for f in futures:
             f.result()
 
-    # only write legacy info if it's missing
-    if not os.path.isfile(LEGACYINFO_PATH):
-        legacy_info_list.write(LEGACYINFO_PATH)
+    legacy_info_list.write(LEGACYINFO_PATH)
 
 
 if __name__ == "__main__":
