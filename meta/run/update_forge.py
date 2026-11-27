@@ -410,7 +410,7 @@ def main():
                     legacy_info.sha1 = file_hash(jar_path, hashlib.sha1)
                     legacy_info.sha256 = file_hash(jar_path, hashlib.sha256)
                     legacy_info.size = os.path.getsize(jar_path)
-                    legacy_info_list.number[key] = legacy_info
+                    legacy_info_list.number[str(version.build)] = legacy_info
         for f in futures:
             f.result()
 

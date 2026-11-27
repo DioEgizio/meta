@@ -331,6 +331,7 @@ def main():
         "1.2.4",
         "1.2.5",
         "1.3.2",
+        "1.4",
         "1.4.1",
         "1.4.2",
         "1.4.3",
@@ -419,7 +420,7 @@ def main():
         eprint(installer_version_filepath)
         if os.path.isfile(installer_version_filepath):
             installer = MojangVersion.parse_file(installer_version_filepath)
-            if entry.mc_version in legacy_versions:
+            if version.mc_version_sane in legacy_versions:
                 v = version_from_modernized_installer(installer, version)
             else:
                 profile = ForgeInstallerProfileV2.parse_file(profile_filepath)
